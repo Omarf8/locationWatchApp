@@ -1,0 +1,110 @@
+//
+//  FamilyCareScroll.swift
+//  safe&sec
+//
+//  Created by DPI Student 050 on 7/29/24.
+//
+
+import SwiftUI
+
+struct FamilyCareScroll: View {
+    var body: some View {
+        ZStack {
+            Color.white
+                .frame(height: 200)
+                .offset(y: 50)
+            ScrollView {
+                VStack {
+                    
+                    Rectangle()
+                        .frame(width: 100, height: 5)
+                        .cornerRadius(10)
+                        .foregroundColor(.gray)
+                        .padding(.bottom)
+                        .shadow(radius: 10)
+                    
+                    
+                    HStack {
+                        Text("Mom")
+                            .font(.system(size: 20, weight: .bold, design: .default))
+                        Spacer()
+                        
+                        Button(action: {}, label: {
+                            Text("Info")
+                                .frame(width: 100, height: 50)
+                                .background(.purple)
+                                .foregroundColor(.white)
+                                .font(.system(size: 20, weight: .bold, design: .default))
+                                .cornerRadius(10)
+                            
+                        })
+                    }
+                    
+                    
+                    HStack {
+                        Text("Dad")
+                            .font(.system(size: 20, weight: .bold, design: .default))
+                        Spacer()
+                        
+                        Button(action: {}, label: {
+                            Text("Info")
+                                .frame(width: 100, height: 50)
+                                .background(.purple)
+                                .foregroundColor(.white)
+                                .font(.system(size: 20, weight: .bold, design: .default))
+                                .cornerRadius(10)
+                            
+                        })
+                    }
+                    
+                    HStack {
+                        Text("Erick")
+                            .font(.system(size: 20, weight: .bold, design: .default))
+                        Spacer()
+                        
+                        Button(action: {}, label: {
+                            Text("Info")
+                                .frame(width: 100, height: 50)
+                                .background(.purple)
+                                .foregroundColor(.white)
+                                .font(.system(size: 20, weight: .bold, design: .default))
+                                .cornerRadius(10)
+                            
+                        })
+                    }
+                    
+                    HStack {
+                        Text("Damarrian")
+                            .font(.system(size: 20, weight: .bold, design: .default))
+                        Spacer()
+                        
+                        Button(action: {}, label: {
+                            Text("Info")
+                                .frame(width: 100, height: 50)
+                                .background(.purple)
+                                .foregroundColor(.white)
+                                .font(.system(size: 20, weight: .bold, design: .default))
+                                .cornerRadius(10)
+                            
+                        })
+                    }
+                    
+                    
+                    
+                } // VStack
+                .padding()
+                .padding(.top)
+                .background(Color.white)
+                .cornerRadius1(30, corners: [.topLeft, .topRight])
+                
+                
+            } // ScrollView
+            .frame(height: 300)
+            
+        } // ZStack
+    }
+}
+
+#Preview {
+    FamilyCareScroll()
+}

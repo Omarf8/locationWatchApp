@@ -1,0 +1,128 @@
+//
+//  DetailedCrimes.swift
+//  safe&sec
+//
+//  Created by DPI Student 050 on 7/22/24.
+//
+
+import SwiftUI
+
+struct DetailedCrimes: View {
+    
+    @Environment(\.presentationMode) var presenatationMode: Binding<PresentationMode>
+    
+    var image: String
+    var title: String
+    var type: String
+    var description: String
+    
+    //    @Binding var details: Bool
+    //    var text: String
+    
+    var body: some View {
+        
+        ZStack {
+            Color(.white)
+            
+            ScrollView {
+                Image(image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .edgesIgnoringSafeArea(.top)
+                
+                DescriptionView(ti: title, ty: type, desc: description)
+                
+            } // ScrollView
+            .edgesIgnoringSafeArea(.top)
+            
+        } // ZStack
+        .navigationBarBackButtonHidden(true)
+        
+        
+        
+        
+    }
+}
+
+// details: .constant(true), text: "NO way"
+#Preview {
+    DetailedCrimes(image: "dogImage", title: "Rabid Dog", type: "Other Crime", description: "Rabid Dog found at the nearest Chase Bank")
+    
+    //    , description: "Dog found near the Chase Bank terrorizing people"
+}
+
+struct BackButton: View {
+    let action: () -> Void
+    var body: some View {
+        Button(action: action, label: {
+            Image(systemName: "chevron.backward")
+                .foregroundColor(.white)
+                .padding(.horizontal, 15)
+                .padding(.vertical, 10)
+                .background(Color.black)
+                .cornerRadius(8.0)
+        })
+    }
+}
+
+struct DescriptionView: View {
+    
+    var ti: String
+    var ty: String
+    var desc: String
+    
+    var body: some View {
+        VStack (alignment: .leading) {
+            Text(ti)
+                .font(.title)
+                .fontWeight(.bold)
+            
+            HStack (spacing: 4) {
+                
+                Text("Danger Type:")
+                    .fontWeight(.medium)
+                    .padding(.vertical, 8)
+                
+                Text(ty)
+                    .lineSpacing(8)
+                    .opacity(0.6)
+                
+                
+                Spacer()
+                
+            } // HStack
+            .padding([.top, .bottom, .trailing], 8)
+            
+            Text("Description")
+                .fontWeight(.medium)
+                .padding(.vertical, 8)
+            
+            Text(desc)
+                .lineSpacing(8)
+                .opacity(0.6)
+        } // VStack
+        .padding()
+        .padding(.top)
+        .background(Color.white)
+        .cornerRadius1(30, corners: [.topLeft, .topRight])
+        .offset(x: 0, y: -30)
+    }
+}
+
+
+// for specific corner radius
+struct RoundedCorner1: Shape {
+    var radius: CGFloat = .infinity
+    var corners: UIRectCorner = .allCorners
+    
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        return Path(path.cgPath)
+    }
+}
+
+extension View {
+    func cornerRadius1(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape(RoundedCorner1(radius: radius, corners: corners))
+    }
+}

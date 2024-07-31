@@ -1,0 +1,85 @@
+//
+//  CustomTabBar.swift
+//  safe&sec
+//
+//  Created by DPI Student 050 on 7/16/24.
+//
+
+import SwiftUI
+
+enum Tabs: Int {
+    case crimes = 0
+    case family = 1
+    case new = 3
+    
+}
+
+struct CustomTabBar: View {
+    
+    @Binding var selectedTab: Tabs
+    
+    var body: some View {
+        
+        HStack (alignment: .center) {
+            
+            
+            Button {
+                
+                // Switch to chats
+                selectedTab = .crimes
+                
+                
+            } label: {
+                
+                TabBarButton(buttonText: "Crimes",
+                             imageName: "eye.fill",
+                             isActive: selectedTab == .crimes)
+                
+            }
+            .tint(.gray)
+            
+            
+            Button {
+                selectedTab = .new
+            } label: {
+                
+                VStack(alignment: .center, spacing: 4) {
+                    Image(systemName: "map.circle")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 38, height: 38)
+                        .foregroundColor(.red)
+                    
+                    Text("Home")
+                        .foregroundColor(.red)
+                }
+            }
+            
+            Button {
+                
+                // Switch to contacts
+                selectedTab = .family
+            } label: {
+                
+                TabBarButton(buttonText: "Family Care",
+                             imageName: "person",
+                             isActive: selectedTab == .family)
+            }
+            .tint(.gray)
+            
+            
+        }
+        .frame(height: 82)
+        
+    }
+}
+
+struct CustomTabBar_Previews: PreviewProvider {
+    static var previews: some View {
+        CustomTabBar(selectedTab: .constant(.family))
+    }
+}
+
+//#Preview {
+//    CustomTabBar()
+//}

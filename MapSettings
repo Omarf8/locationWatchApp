@@ -1,0 +1,248 @@
+//
+//  mapSettings.swift
+//  safe&sec
+//
+//  Created by DPI Student 050 on 7/9/24.
+//
+
+import SwiftUI
+
+struct mapSettings: View {
+    
+    // Slider Variables
+    @State var dangerSliderValue = 10.0
+    @State var timeSliderValue = 14.0
+    var lowValue = 5.0
+    var highValue = 50.0
+    var dayLowValue = 7.0
+    var dayHighValue = 100.0
+    
+    // Removes popover
+    @Binding var showPopover: Bool
+    
+    // Toggle Variables
+    @State var homicide: Bool = true
+    @State var assault: Bool = true
+    @State var dog: Bool = true
+    @State var shootings: Bool = true
+    @State var cat: Bool = true
+    @State var theft: Bool = true
+    @State var narcotics: Bool = true
+    @State var disasters: Bool = true
+    
+    
+    var body: some View {
+        
+        
+        
+        ZStack {
+            Color.black.ignoresSafeArea().opacity(0.85)
+            
+            ScrollView {
+                
+                VStack (alignment: .leading) {
+                    
+                    // Settings Section
+                    HStack {
+                        
+                        SectionView(icon: "gearshape.fill", title: "Settings")
+                        
+                        Spacer()
+                        
+                        
+                    } // HStack
+                    .padding()
+                    .offset(x: 5)
+                    
+                    Text("Customize alerts, area view, and other info related to your safety")
+                        .foregroundColor(.white)
+                        .offset(x: 20)
+                        .padding(.trailing)
+                    
+                    // Danger Radius Section
+                    HStack {
+                        Image(systemName: "dot.radiowaves.left.and.right")
+                            .resizable()
+                            .frame(width: 50, height: 35)
+                            .foregroundColor(.white)
+                        
+                        Text("Danger Radius")
+                            .font(.system(size: 25))
+                            .foregroundColor(.white)
+                            .bold()
+                    }
+                    .padding()
+                    .offset(x: 5)
+                    
+                    Text("Select the Radius (in miles): \(Int(dangerSliderValue)) mi")
+                        .foregroundColor(.white)
+                        .offset(x: 20)
+                        .padding(.trailing)
+
+                    // Slider
+                    HStack {
+                        Text("\(Int(lowValue))")
+                            .foregroundColor(.white)
+                            .font(.system(size: 25))
+                            .padding(.trailing)
+                            
+                        Slider(value: $dangerSliderValue, in: lowValue...highValue)
+                        Text("\(Int(highValue))")
+                            .foregroundColor(.white)
+                            .font(.system(size: 25))
+                            .padding(.leading)
+                    }
+                    .tint(.red)
+                    .padding()
+                    
+                    
+                    HStack {
+                        SectionView(icon: "clock", title: "Time")
+                    }
+                    .padding()
+                    .offset(x: 5)
+                    
+                    Text("Select how recent crimes occurred that you would like to see pop up \n")
+                        .foregroundColor(.white)
+                        .offset(x: 20)
+                        .padding(.trailing)
+                    
+                    Text("Days: \(Int(timeSliderValue))")
+                        .foregroundColor(.white)
+                        .offset(x: 20)
+                        .padding(.trailing)
+                    
+                    // Second Slider
+                    
+                    HStack {
+                        Text("\(Int(dayLowValue))")
+                            .foregroundColor(.white)
+                            .font(.system(size: 25))
+                            .padding(.trailing)
+                        Slider(value: $timeSliderValue, in: dayLowValue...dayHighValue)
+                        Text("\(Int(dayHighValue))")
+                            .foregroundColor(.white)
+                            .font(.system(size: 25))
+                            .padding(.leading)
+                    }
+                    .tint(.red)
+                    .padding()
+                    
+                    // Categories Section
+                    HStack {
+                        SectionView(icon: "exclamationmark.triangle", title: "Categories")
+                    }
+                    .padding()
+                    .offset(x: 5)
+                    
+                    // Different Types of Dangers
+                    Toggle(isOn: $homicide){
+                        Text("Homicide")
+                            .foregroundColor(.white)
+                            .offset(x: 20)
+                            .padding(.trailing)
+                        
+                    } // Toggle
+                    .tint(.red)
+                    .padding(.trailing)
+                    
+                    Toggle(isOn: $assault){
+                        Text("Battery")
+                            .foregroundColor(.white)
+                            .offset(x: 20)
+                            .padding(.trailing)
+                    } // Toggle
+                    .tint(.red)
+                    .padding(.trailing)
+                    
+                    Toggle(isOn: $dog){
+                        Text("Dog")
+                            .foregroundColor(.white)
+                            .offset(x: 20)
+                            .padding(.trailing)
+                    } // Toggle
+                    .tint(.red)
+                    .padding(.trailing)
+                    
+                    Toggle(isOn: $cat){
+                        Text("Cat")
+                            .foregroundColor(.white)
+                            .offset(x: 20)
+                            .padding(.trailing)
+                    } // Toggle
+                    .tint(.red)
+                    .padding(.trailing)
+                    
+                    Toggle(isOn: $theft){
+                        Text("Theft")
+                            .foregroundColor(.white)
+                            .offset(x: 20)
+                            .padding(.trailing)
+                    } // Toggle
+                    .tint(.red)
+                    .padding(.trailing)
+                    
+                    Toggle(isOn: $narcotics){
+                        Text("Narcotics")
+                            .foregroundColor(.white)
+                            .offset(x: 20)
+                            .padding(.trailing)
+                    } // Toggle
+                    .tint(.red)
+                    .padding(.trailing)
+                    
+                    Toggle(isOn: $disasters){
+                        Text("Natural Disaster")
+                            .foregroundColor(.white)
+                            .offset(x: 20)
+                            .padding(.trailing)
+                    } // Toggle
+                    .tint(.red)
+                    .padding(.trailing)
+                    
+                    
+                    
+                    
+                    
+                    Spacer()
+                } // VStack
+                .overlay(alignment: .top) {
+                    Button(action: {
+                        showPopover.toggle()
+                    }, label: {
+                        CircleIcons(icon: "xmark")
+                    })
+                    .offset(x: 140)
+                }
+                
+            } // ScrollView
+            
+            
+        } // ZStack
+        
+        
+        
+    }
+}
+
+#Preview {
+    mapSettings(showPopover: .constant(true))
+}
+
+struct SectionView: View {
+    
+    var icon: String
+    var title: String
+    
+    var body: some View {
+        Image(systemName: icon)
+            .resizable()
+            .frame(width: 35, height: 35)
+            .foregroundColor(.white)
+        
+        Text(title)
+            .font(.system(size: 25))
+            .foregroundColor(.white)
+            .bold()
+    }
+}

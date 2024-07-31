@@ -1,0 +1,198 @@
+//
+//  CrimeView.swift
+//  safe&sec
+//
+//  Created by DPI Student 050 on 7/20/24.
+//
+
+import SwiftUI
+
+struct CrimeView: View {
+    
+    @State private var report: Bool = false
+    @State private var dogDetails: Bool = false
+    @State private var catDetails: Bool = false
+    @State private var cvsDetails: Bool = false
+    @State private var batteryDetails: Bool = false
+    
+    var body: some View {
+        ZStack {
+            Color.black.ignoresSafeArea().opacity(0.85)
+            
+            ScrollView {
+                
+                VStack {
+                    
+                    // Nearby Section
+                    HStack {
+                        Text("Nearby")
+                            .foregroundColor(.white)
+                            .font(.title)
+                            .bold()
+                            .padding()
+                        
+                        Spacer()
+                    }
+                    
+                    Button(action: {
+                        cvsDetails.toggle()
+                    }, label: {
+                        CrimeTabs(title: "Pharmacy Theft", date: "7/15/24", description: "A local robbery happened within the CVS Pharmacy with a man taking $200 worth of Oreos", location: "400 W Madison St", time: "34 minutes ago")
+                    })
+                    .popover(isPresented: $cvsDetails){
+                        DetailedCrimes(image: "oreoImage",title: "Oreos Stolen", type: "Theft", description: "A man stuffed Oreos in his jacket and ran out of the pharmacy which is totaled to have cost around $200")
+                            .presentationCompactAdaptation(.sheet)
+                    }
+                    
+                    
+                    Button(action: {
+                        dogDetails.toggle()
+                    }, label: {
+                        CrimeTabs(title: "Rabid Dog", date: "7/15/24", description: "A dog with rabies was spotted near a Chipotle Mexican Grill", location: "525 W Monroe St", time: "5 hours ago")
+                    })
+                    .popover(isPresented: $dogDetails){
+                        DetailedCrimes(image: "dogImage",title: "Rabid Dog", type: "Other Crime", description: "Be careful not to get too close to the wild dog that was attracted by the culinary skills of the chefs at the restaurant.")
+                            .presentationCompactAdaptation(.sheet)
+                    }
+                    
+                    
+                    Button(action: {
+                        catDetails.toggle()
+                    }, label: {
+                        CrimeTabs(title: "Wandering Cat", date: "7/13/24", description: "A cat is seemingly wandering around the local Yolk place", location: "500 W Madison St", time: "1 day ago")
+                    })
+                    .popover(isPresented: $catDetails){
+                        DetailedCrimes(image: "catImage", title: "Wandering Cat", type: "Other Crime", description: "If you have an allergy to cats watch out")
+                            .presentationCompactAdaptation(.sheet)
+                    }
+                    
+                    
+                    
+                    // Recent Section
+                    HStack {
+                        Text("Recent")
+                            .foregroundColor(.white)
+                            .font(.title)
+                            .bold()
+                            .padding()
+                        
+                        Spacer()
+                    }
+                    
+                    Button(action: {
+                        cvsDetails.toggle()
+                    }, label: {
+                        CrimeTabs(title: "Pharmacy Theft", date: "7/15/24", description: "A local robbery happened within the CVS Pharmacy with a man taking $200 worth of Oreos", location: "400 W Madison St", time: "34 minutes ago")
+                    })
+                    
+                    // Farther Away Section
+                    
+                    HStack {
+                        Text("Farther Away")
+                            .foregroundColor(.white)
+                            .font(.title)
+                            .bold()
+                            .padding()
+                        
+                        Spacer()
+                    }
+                    
+                    Button(action: {
+                        batteryDetails.toggle()
+                    }, label: {
+                        CrimeTabs(title: "Battery On Addison", date: "7/13/24", description: "Near the Red Line on Addison a man was charged with battery", location: "2498-2438 E 74th Pl", time: "1 day ago")
+                    })
+                    .popover(isPresented: $batteryDetails){
+                        DetailedCrimes(image: "batteryImage", title: "Battery Near An Apartment", type: "Battery", description: "At an apartment building, a man was assaulted walking down the street. He was heavily injured and could not seem to identify the suspect.")
+                            .presentationCompactAdaptation(.sheet)
+                    }
+                    
+                    
+                    Spacer()
+                    
+                } // VStack
+                .overlay(alignment: .top) {
+                    Button(action: {
+                        report.toggle()
+                    }, label: {
+                        CircleIcons(icon: "exclamationmark.triangle.fill")
+                    })
+                    .popover(isPresented: $report){
+                        reportView(report: $report)
+                            .presentationCompactAdaptation(.fullScreenCover)
+                    }
+                    .offset(x: 140)
+                }
+                
+            } // ScrollView
+            .padding(.bottom, 80)
+            
+            
+        } // ZStack
+        
+        
+    }
+}
+
+#Preview {
+    CrimeView()
+}
+
+struct CrimeTabs: View {
+    
+    var title: String
+    var date: String
+    var description: String
+    var location: String
+    var time: String
+    
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 8)
+                .frame(width: 380, height: 140)
+                .foregroundColor(.gray)
+            VStack {
+                HStack {
+                    Text(title)
+                        .foregroundColor(.black)
+                        .bold()
+                        .font(.system(size: 20))
+                    
+                    
+                    Text(date)
+                        .foregroundColor(.black)
+                }
+                .frame(width: 380, height: 30)
+                .offset(y: 5)
+                
+                
+                HStack {
+                    Text(description)
+                        .foregroundColor(.black)
+                    
+                    //                        .padding(.trailing, 35)
+                }
+                .frame(width: 370, height: 70)
+                .offset(y: -5)
+                
+                
+                HStack {
+                    Text(location)
+                        .foregroundColor(.black)
+                        .padding(.leading)
+                    Spacer()
+                    
+                    Text(time)
+                        .foregroundColor(.black)
+                        .padding(.trailing)
+                    
+                }
+                .offset(y: -3)
+                
+                
+            } // VStack
+            .frame(width: 380, height: 140)
+        }
+        
+    }
+}

@@ -1,0 +1,48 @@
+//
+//  ContentView.swift
+//  safe&sec
+//
+//  Created by DPI Student 050 on 7/9/24.
+//
+
+import SwiftUI
+import UIKit
+import MapKit
+
+struct ContentView: View {
+    
+    
+    // Hides the tab bar made by TabView
+    init() {
+        UITabBar.appearance().isHidden = true
+    }
+    
+    
+    
+    @State var selectedTab: Tabs = .new
+    
+    var body: some View {
+        
+        TabView {
+            
+            if selectedTab == .crimes{
+                CrimeView()
+            }
+            else if selectedTab == .family{
+                FamilyCare()
+            }
+            else {
+                mapHomeScreen()
+            }
+        }
+        .toolbar(.hidden, for: .tabBar)
+        .overlay(alignment: .bottom) {
+            CustomTabBar(selectedTab: $selectedTab)
+        }
+        
+    }
+}
+
+#Preview {
+    ContentView()
+}

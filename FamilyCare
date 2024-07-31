@@ -1,0 +1,109 @@
+//
+//  FamilyCare.swift
+//  safe&sec
+//
+//  Created by DPI Student 050 on 7/24/24.
+//
+
+import MapKit
+import SwiftUI
+
+struct FamilyCare: View {
+    
+    @State private var cameraPosition: MapCameraPosition = .region(.userRegion)
+    
+    var body: some View {
+        let park = CLLocationCoordinate2D(latitude: 41.879659866645675, longitude: -87.64379358146478)
+        let market = CLLocationCoordinate2D(latitude: 41.88044348451353, longitude: -87.64011883324481)
+        let coworker = CLLocationCoordinate2D(latitude: 41.87916602562143, longitude: -87.6412892916202)
+        
+        ZStack {
+            Color.black.ignoresSafeArea().opacity(0.85)
+            
+            
+            Map(position: $cameraPosition) {
+                
+                
+                Annotation("You", coordinate: .userLocation) {
+                    ZStack {
+                        
+                        Circle()
+                            .frame(width: 32, height: 32)
+                            .foregroundColor(.blue.opacity(0.25))
+                        
+                        Circle()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.white)
+                        
+                        Circle()
+                            .frame(width: 12, height: 12)
+                            .foregroundColor(.blue)
+                    }
+                }
+                // Mom Location
+                Annotation("Mom", coordinate: market) {
+                    ZStack {
+                        
+                        Circle()
+                            .frame(width: 32, height: 32)
+                            .foregroundColor(.red.opacity(0.25))
+                        
+                        Circle()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.white)
+                        
+                        Circle()
+                            .frame(width: 12, height: 12)
+                            .foregroundColor(.red)
+                    }
+                }
+                // Dad Location
+                Annotation("Dad", coordinate: park) {
+                    ZStack {
+                        
+                        Circle()
+                            .frame(width: 32, height: 32)
+                            .foregroundColor(.green.opacity(0.25))
+                        
+                        Circle()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.white)
+                        
+                        Circle()
+                            .frame(width: 12, height: 12)
+                            .foregroundColor(.green)
+                    }
+                }
+                
+                // Erick Location
+                Annotation("Erick", coordinate: coworker) {
+                    ZStack {
+                        
+                        Circle()
+                            .frame(width: 32, height: 32)
+                            .foregroundColor(.purple.opacity(0.25))
+                        
+                        Circle()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.white)
+                        
+                        Circle()
+                            .frame(width: 12, height: 12)
+                            .foregroundColor(.purple)
+                    }
+                }
+            }
+            .padding(.bottom, 80)
+        
+            FamilyCareScroll()
+                .offset(y: 149)
+                
+            
+        } // ZStack
+        
+    }
+}
+
+#Preview {
+    FamilyCare()
+}

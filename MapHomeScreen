@@ -1,0 +1,210 @@
+//
+//  mapHomeScreen.swift
+//  safe&sec
+//
+//  Created by DPI Student 050 on 7/16/24.
+//
+
+import SwiftUI
+import MapKit
+
+struct mapHomeScreen: View {
+    
+    // Various Locations around the User
+    
+    let chaseBank = CLLocationCoordinate2D(latitude: 41.87951272836981, longitude: -87.64133614755458)
+    let dpi = CLLocationCoordinate2D(latitude: 41.87897321874647, longitude: -87.63722463587355)
+    let cvs = CLLocationCoordinate2D(latitude: 41.88213018757066, longitude: -87.63935521929228)
+    let yolk = CLLocationCoordinate2D(latitude: 41.882056928789474, longitude: -87.64093377581008)
+    let chipotle = CLLocationCoordinate2D(latitude: 41.88038712905225, longitude: -87.6408671954385)
+    let redTrain = CLLocationCoordinate2D(latitude: 41.94729219841052, longitude: -87.65351406441742)
+    
+    // Reveals the mapSettings
+    
+    @State private var showPopover: Bool = false
+    
+    
+    // Variable for the camera position
+    @State private var cameraPosition: MapCameraPosition = .region(.userRegion)
+    // User input text
+    @State private var searchText = ""
+    // Used to plot markers from the search bar
+    @State private var results = [MKMapItem]()
+    // Clickable markers
+    @State private var mapSelection: MKMapItem?
+    // Info within the clickable markers
+    @State private var showDetails = false
+    // Directions within the sheet when clicking on the markers
+    @State private var getDirections = false
+    // MapPolyline Variables
+    @State private var routeDisplaying = false
+    @State private var route: MKRoute?
+    @State private var routeDestination: MKMapItem?
+    
+    var body: some View {
+        ZStack {
+            // Gray background
+            Color.black.ignoresSafeArea().opacity(0.85)
+            
+            Map(position: $cameraPosition, selection: $mapSelection) {
+                
+                // Three 'crime' sites on the map
+                Marker("CVS", systemImage: "dog", coordinate: cvs)
+                
+                Marker("Yolk", systemImage: "cat", coordinate: yolk)
+                
+                Marker("Chipotle Mexican Grill", systemImage: "dog", coordinate: chipotle)
+                
+                Marker("CTA Addison", systemImage: "train", coordinate: redTrain)
+                
+                
+                // Marks the Users location
+                Annotation("You", coordinate: .userLocation) {
+                    ZStack {
+                        
+                        Circle()
+                            .frame(width: 32, height: 32)
+                            .foregroundColor(.blue.opacity(0.25))
+                        
+                        Circle()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.white)
+                        
+                        Circle()
+                            .frame(width: 12, height: 12)
+                            .foregroundColor(.blue)
+                    }
+                }
+                // Plots locations gathered from the users input
+                ForEach(results, id: \.self) { item in
+                    
+                    if routeDisplaying {
+                        if item == routeDestination {
+                            let placemark = item.placemark
+                            Marker(placemark.name ?? "", coordinate: placemark.coordinate)
+                        }
+                    } else {
+                        let placemark = item.placemark
+                        Marker(placemark.name ?? "", coordinate: placemark.coordinate)
+                    }
+                    
+                }
+                // Line to a certain location
+                if let route {
+                    MapPolyline(route.polyline)
+                        .stroke(.blue, lineWidth: 6)
+                }
+                
+            } // Map
+            .padding(.bottom, 80)
+            // Map settings button
+            .overlay(alignment: .top) {
+                Button(action: {
+                    showPopover.toggle()
+                }, label: {
+                    CircleIcons(icon: "gearshape")
+                })
+                .popover(isPresented: $showPopover){
+                    mapSettings(showPopover: $showPopover)
+                        .presentationCompactAdaptation(.fullScreenCover)
+                }
+                .offset(x: 155, y: 615)
+            }
+            // Search bar
+            .overlay(alignment: .top) {
+                TextField("Search for a location...", text: $searchText)
+                    .font(.subheadline)
+                    .padding(12)
+                    .background(.white)
+                    .cornerRadius(10)
+                    .padding()
+                    .shadow(radius: 10)
+                
+            }
+            // When the user hits enter it searches for those locations
+            .onSubmit(of: .text) {
+                Task { await searchPlaces() }
+            }
+            // Creates the route from one place to the location
+            .onChange(of: getDirections, { oldValue, newValue in
+                if newValue {
+                    fetchRoute()
+                }
+            })
+            // Allows changing from one marker to another
+            .onChange(of: mapSelection, { oldValue, newValue in
+                showDetails = newValue != nil
+            })
+            // Info for a marker
+            .sheet(isPresented: $showDetails, content: {
+                LocationDetailsView(mapSelection: $mapSelection, show: $showDetails, getDirections: $getDirections)
+                    .presentationDetents([.height(340)])
+                    .presentationBackgroundInteraction(.enabled(upThrough: .height(340)))
+                    .presentationCornerRadius(12)
+            })
+            .mapControls {
+                MapCompass()
+                
+            }
+            
+            
+        } // ZStack
+    }
+}
+
+#Preview {
+    mapHomeScreen()
+}
+
+extension mapHomeScreen {
+    // Searches for locations
+    func searchPlaces() async {
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = searchText
+        request.region = .userRegion
+        
+        let results = try? await MKLocalSearch(request: request).start()
+        self.results = results?.mapItems ?? []
+        
+    }
+    
+    // Creates a route from one location to another
+    func fetchRoute() {
+        if let mapSelection {
+            let request = MKDirections.Request()
+            request.source = MKMapItem(placemark: .init(coordinate: .userLocation))
+            request.destination = mapSelection
+            
+            Task {
+                let result = try? await MKDirections(request: request).calculate()
+                route = result?.routes.first
+                routeDestination = mapSelection
+                
+                withAnimation(.snappy) {
+                    routeDisplaying = true
+                    showDetails = false
+                    
+                    if let rect = route?.polyline.boundingMapRect, routeDisplaying {
+                        cameraPosition = .rect(rect)
+                    }
+                }
+            }
+        }
+    }
+}
+
+// User coordinates
+extension CLLocationCoordinate2D {
+    static var userLocation: CLLocationCoordinate2D {
+        return .init(latitude: 41.87914511411117, longitude: -87.64226074281832)
+    }
+}
+
+// User region
+extension MKCoordinateRegion {
+    static var userRegion: MKCoordinateRegion {
+        return .init(center: .userLocation,
+                     latitudinalMeters: 1000,
+                     longitudinalMeters: 1000)
+    }
+}

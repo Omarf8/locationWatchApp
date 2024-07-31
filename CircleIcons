@@ -1,0 +1,28 @@
+//
+//  CircleIcons.swift
+//  safe&sec
+//
+//  Created by DPI Student 050 on 7/18/24.
+//
+
+import SwiftUI
+
+struct CircleIcons: View {
+    
+    var icon: String
+    
+    var body: some View {
+        
+        Image(systemName: icon)
+            .frame(width: 50, height: 50)
+            .background(.black)
+            .foregroundColor(.white)
+            .font(.system(size: 20, weight: .bold, design: .default))
+            .cornerRadius(100)
+    }
+}
+
+#Preview {
+    CircleIcons(icon: "cloud")
+}
+
